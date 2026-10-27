@@ -51,7 +51,7 @@ export default function App() {
       return;
     }
     const id = window.location.hash.slice(1);
-    if (id && !id.startsWith('/')) requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
+    if (id && !id.startsWith('project-')) requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView());
   }, [slug]);
 
   if (slug) return <div style={{ background: '#0C0C0C', overflowX: 'clip' }}><CaseStudy slug={slug} /></div>;

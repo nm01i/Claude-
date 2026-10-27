@@ -14,7 +14,7 @@ Everything lives in `src/content/content.ts`: profile, about, projects, skills, 
 * **Project screens**: add `{ src, alt }` entries to a project's `images` (put files in `public/`). Until then a labelled "Placeholder" is shown.
 * **Live URL**: set `liveUrl` on a project to show a "Visit project" link; leave it unset to hide it.
 * **Contact links**: email and LinkedIn are pre-filled from the supplied profile PDF; Behance is empty and shows an "Add your Behance URL" placeholder.
-* **Case studies**: routed by hash: `#/project/triply`, `#/project/lumie`, `#/project/fellaz`.
+* **Case studies**: routed by hash: `#project-triply`, `#project-lumie`, `#project-fellaz`.
 
 ## Modes
 * Desktop (768px and up), motion allowed, WebGL available: cinematic scroll scene.

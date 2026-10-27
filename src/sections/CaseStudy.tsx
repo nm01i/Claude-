@@ -79,7 +79,7 @@ export default function CaseStudy({ slug }: { slug: string }) {
         </section>
 
         <nav aria-label="Case study navigation" className="mt-20 flex flex-col items-start justify-between gap-8 border-t border-[#D7E2EA]/15 pt-10 sm:flex-row sm:items-center md:mt-32">
-          <a href={`#/project/${next.slug}`} className="group inline-flex items-center gap-3 font-medium uppercase tracking-wider text-[#D7E2EA]" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)' }}>
+          <a href={`#project-${next.slug}`} className="group inline-flex items-center gap-3 font-medium uppercase tracking-wider text-[#D7E2EA]" style={{ fontSize: 'clamp(1rem, 2vw, 1.6rem)' }}>
             Next: {next.name} <ArrowRight size={22} className="transition-transform group-hover:translate-x-1" aria-hidden />
           </a>
           <ContactButton label={contact.cta} href="#contact" />

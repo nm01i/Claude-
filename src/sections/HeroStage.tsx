@@ -66,7 +66,7 @@ export default function HeroStage({ stageRef, progress, cinematic }: Props) {
             <FadeIn delay={0.6} y={30}>
               <Magnet padding={150} strength={3} activeTransition="transform 0.3s ease-out" inactiveTransition="transform 0.6s ease-in-out">
                 <img
-                  src="/anastasiia-doll.webp"
+                  src={`${import.meta.env.BASE_URL}anastasiia-doll.webp`}
                   alt="Stylized 3D portrait of Anastasiia Trapeznikova"
                   width={897}
                   height={1189}

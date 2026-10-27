@@ -67,7 +67,7 @@ function CameraRig({ progress, active }: { progress: Progress; active: React.Mut
 }
 
 function Character() {
-  const tex = useTexture('/anastasiia-doll.webp');
+  const tex = useTexture(`${import.meta.env.BASE_URL}anastasiia-doll.webp`);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = 4;
   const ref = useRef<THREE.Group>(null);

@@ -46,7 +46,7 @@ function Card({ project, index, total, animate }: { project: Project; index: num
               </span>
             </div>
           </div>
-          <CaseButton href={`#/project/${project.slug}`}>Case study</CaseButton>
+          <CaseButton href={`#project-${project.slug}`}>Case study</CaseButton>
         </div>
 
         <div className="flex gap-3 sm:gap-4">
