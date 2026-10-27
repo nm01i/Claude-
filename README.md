@@ -11,10 +11,12 @@ npm run build
 ## Editing content
 Everything lives in `src/content/content.ts`: profile, about, projects, skills, contact links.
 
-* **Project screens**: add `{ src, alt }` entries to a project's `images` (put files in `public/`). Until then a labelled "Placeholder" is shown.
+* **Projects**: five entries in `projects`. Each has `id, slug, title, category, description, coverImage, images, caseStudy` (plus `highlights`, `kind`, optional `year`, `pending`). `coverImage` is the card preview; `images` fill the case-study gallery.
+* **Case-study sections** (`caseStudy.overview|brief|audience|challenge|process|decisions|visual|reflection`): only defined sections render; the rest are listed under "Still to add".
+* **Project screens**: add `{ src, alt }` entries to a project's `coverImage` / `images` (put files in `public/`). Until then (or if an image fails to load) a labelled "Placeholder image" is shown.
 * **Live URL**: set `liveUrl` on a project to show a "Visit project" link; leave it unset to hide it.
 * **Contact links**: email and LinkedIn are pre-filled from the supplied profile PDF; Behance is empty and shows an "Add your Behance URL" placeholder.
-* **Case studies**: routed by hash: `#project-triply`, `#project-lumie`, `#project-fellaz`.
+* **Case studies**: routed by hash: `#project-triply`, `#project-lumie`, `#project-muza`, `#project-saas`, `#project-gift-match` (`#/project/<slug>` also works).
 
 ## Modes
 * Desktop (768px and up), motion allowed, WebGL available: cinematic scroll scene.

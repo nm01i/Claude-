@@ -21,74 +21,155 @@ export const about = {
   ],
 };
 
+export type ProjectImage = { src: string; alt: string };
+
+/** A case-study section. Only sections with real material should be defined. */
+export type CaseBlock = { body?: string; points?: string[] };
+
+export type CaseStudyContent = {
+  overview?: CaseBlock;
+  brief?: CaseBlock;
+  audience?: CaseBlock;
+  challenge?: CaseBlock;
+  process?: CaseBlock;
+  decisions?: CaseBlock;
+  visual?: CaseBlock;
+  reflection?: CaseBlock;
+};
+
+export const caseSections: { key: keyof CaseStudyContent; label: string }[] = [
+  { key: 'overview', label: 'Project overview' },
+  { key: 'brief', label: 'Brief and objectives' },
+  { key: 'audience', label: 'Target audience' },
+  { key: 'challenge', label: 'Design challenge' },
+  { key: 'process', label: 'Design process' },
+  { key: 'decisions', label: 'Key UX decisions' },
+  { key: 'visual', label: 'Visual design and interface' },
+  { key: 'reflection', label: 'Reflection / next steps' },
+];
+
 export type Project = {
-  slug: string;
+  id: string;
+  slug: string; // route: #project-<slug>
   number: string;
-  name: string;
+  title: string;
   category: string;
-  kind: string; // concept vs. commissioned — shown as a badge
-  summary: string;
-  focus: string[];
-  note?: string;
-  /** Real screens. Leave empty to show a clearly labelled placeholder. */
-  images: { src: string; alt: string }[];
-  /** Real URL of the project, if one exists. Leave empty to hide the link. */
+  /** Shown as a badge. Never claim "client work" or "launched" unless confirmed. */
+  kind: string;
+  description: string;
+  /** Short list of focus areas; leave empty until known. */
+  highlights: string[];
+  /** Main preview. Leave undefined to show a labelled placeholder. */
+  coverImage?: ProjectImage;
+  /** Further real screens for the case-study gallery. */
+  images: ProjectImage[];
+  /** Only set when the real year is known. */
+  year?: string;
   liveUrl?: string;
+  /** Which pieces of the entry are still placeholders awaiting real content. */
+  pending?: { description?: boolean; highlights?: boolean; kind?: boolean };
+  caseStudy: CaseStudyContent;
 };
 
 export const projects: Project[] = [
   {
+    id: 'triply',
     slug: 'triply',
     number: '01',
-    name: 'TRIPLY',
+    title: 'TRIPLY',
     category: 'Travel Planning Platform / Product Design',
     kind: 'Concept project',
-    summary:
-      'TRIPLY is a concept for a travel planning platform designed to help travel designers organize trips, build itineraries, manage trip details, and present personalized travel plans to clients.',
-    focus: [
+    description:
+      'TRIPLY is a travel planning platform concept designed to help organize trips, build itineraries, manage travel details, and present personalized travel plans.',
+    highlights: [
       'Information architecture',
-      'Dashboard and trip management',
+      'Trip management interface',
       'Itinerary planning',
-      'User flows and interface design',
-      'Client-facing trip presentation',
+      'User flows',
+      'Interface design',
     ],
-    note: 'Presented as a concept product, not a commercial SaaS.',
     images: [],
+    caseStudy: {
+      overview: {
+        body:
+          'TRIPLY is a concept for a travel planning platform that helps travel designers organize trips, build itineraries, manage trip details, and present personalized travel plans to clients. It is presented as a concept product, not a commercial SaaS.',
+      },
+      audience: { body: 'Travel designers who plan trips, and the clients who receive personalized travel plans.' },
+    },
   },
   {
+    id: 'lumie',
     slug: 'lumie',
     number: '02',
-    name: 'LUMIÉ',
+    title: 'LUMIÉ',
     category: 'Skincare E-commerce / Website Design',
     kind: 'Concept project',
-    summary:
-      'LUMIÉ is a skincare e-commerce website concept focused on a clean visual identity, clear product presentation, and an intuitive shopping experience.',
-    focus: [
-      'Homepage and visual hierarchy',
-      'Product discovery and catalog structure',
+    description:
+      'LUMIÉ is a skincare e-commerce website concept focused on refined visual presentation, product discovery, and an intuitive shopping experience.',
+    highlights: [
+      'Homepage design',
+      'Product catalog',
       'Product presentation',
       'E-commerce user experience',
-      'Responsive interface design',
+      'Responsive layouts',
     ],
     images: [],
+    caseStudy: {
+      overview: {
+        body:
+          'LUMIÉ is a skincare e-commerce website concept with a clean visual identity, clear product presentation, and an intuitive shopping experience.',
+      },
+    },
   },
   {
-    slug: 'fellaz',
+    id: 'muza',
+    slug: 'muza',
     number: '03',
-    name: 'FELLAZ',
-    category: 'Barbershop Website / Web Design',
-    kind: 'Concept project',
-    summary:
-      'FELLAZ is a website concept for a barbershop in South Korea, designed around a distinctive visual identity and a clear path to exploring services and making an appointment.',
-    focus: [
-      'Brand-oriented visual design',
-      'Service presentation',
-      'Appointment booking experience',
-      'Mobile-first usability',
-      'Korean-language interface considerations',
-    ],
-    note: 'The booking flow is a prototype; no real booking integration.',
+    title: 'MUZA',
+    category: 'Website Design / UI/UX',
+    kind: 'Project type to be confirmed',
+    // Source: profile PDF ("MUZA (an AI-assisted interior design platform)"). Nothing else is known.
+    description:
+      'MUZA is an AI-assisted interior design platform. [Editable placeholder: add the project description, your role and the main design work here.]',
+    highlights: [],
     images: [],
+    pending: { description: true, highlights: true, kind: true },
+    caseStudy: {
+      overview: { body: 'An AI-assisted interior design platform, as listed in the profile. The rest of the case study has not been written yet.' },
+    },
+  },
+  {
+    id: 'saas',
+    slug: 'saas',
+    number: '04',
+    title: 'FlowAutomate',
+    category: 'SaaS Website / UI/UX Design',
+    kind: 'Project type to be confirmed',
+    // Source: profile PDF ("a landing page for an AI automation SaaS product"). The listing
+    // called this project "SAAS"; the route slug keeps that working name.
+    description:
+      'A landing page for an AI automation SaaS product. [Editable placeholder: add the product purpose, target audience and the interface work here.]',
+    highlights: [],
+    images: [],
+    pending: { description: true, highlights: true, kind: true },
+    caseStudy: {
+      overview: { body: 'A landing page for an AI automation SaaS product, as listed in the profile. The rest of the case study has not been written yet.' },
+    },
+  },
+  {
+    id: 'gift-match',
+    slug: 'gift-match',
+    number: '05',
+    title: 'GIFT MATCH',
+    category: 'Product Concept / UI/UX Design',
+    kind: 'Concept project',
+    // No source material exists for this project yet.
+    description:
+      '[Editable placeholder: add a short description of Gift Match, its purpose and its user flow.]',
+    highlights: [],
+    images: [],
+    pending: { description: true, highlights: true },
+    caseStudy: {},
   },
 ];
 

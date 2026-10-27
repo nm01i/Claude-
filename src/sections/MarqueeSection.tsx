@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { projects, skills } from '../content/content';
 
 const row1 = [...skills.design, ...skills.tools]; // 11
-const row2 = Array.from(new Set(projects.flatMap((p) => p.focus))).slice(0, 10);
+const row2 = Array.from(new Set(projects.flatMap((p) => p.highlights))).slice(0, 10);
 
 const GRADS = [
   'linear-gradient(135deg,#1a0f24,#3a1450)',
