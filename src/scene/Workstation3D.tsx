@@ -75,7 +75,7 @@ function Character() {
     if (ref.current) ref.current.position.y = Math.sin(clock.elapsedTime * 1.2) * 0.02;
   });
   const h = 2.0;
-  const w = h * (897 / 1189);
+  const w = h * (726 / 900);
   return (
     <group position={[-1.45, 1.45, 0.85]}>
       <Billboard follow lockX lockZ>

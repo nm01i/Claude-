@@ -68,8 +68,8 @@ export default function HeroStage({ stageRef, progress, cinematic }: Props) {
                 <img
                   src={`${import.meta.env.BASE_URL}anastasiia-doll.webp`}
                   alt="Stylized 3D portrait of Anastasiia Trapeznikova"
-                  width={897}
-                  height={1189}
+                  width={726}
+                  height={900}
                   className="h-auto w-full"
                 />
               </Magnet>
