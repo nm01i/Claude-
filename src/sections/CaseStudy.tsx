@@ -41,7 +41,8 @@ export default function CaseStudy({ slug }: { slug: string }) {
   const pend = p.pending ?? {};
   const written = caseSections.filter((s) => p.caseStudy[s.key]);
   const missing = caseSections.filter((s) => !p.caseStudy[s.key]);
-  const gallery = p.images.length ? p.images : [undefined, undefined, undefined];
+  const screens = p.images.filter((x) => !x.mobile);
+  const phones = p.images.filter((x) => x.mobile);
 
   return (
     <main className="min-h-screen bg-[#0C0C0C] px-5 pb-24 pt-8 sm:px-8 md:px-10">
@@ -64,8 +65,8 @@ export default function CaseStudy({ slug }: { slug: string }) {
         </FadeIn>
 
         <FadeIn delay={0.1} className="mt-12 md:mt-16">
-          <div className="aspect-[4/3] overflow-hidden rounded-[32px] border-2 border-[#D7E2EA]/60 sm:rounded-[48px] md:aspect-[21/9] md:rounded-[60px]">
-            <Media image={p.coverImage} label={`${p.title} cover`} hint="Add coverImage in src/content/content.ts" eager />
+          <div className="aspect-[16/9] overflow-hidden rounded-[32px] border-2 border-[#D7E2EA]/60 sm:rounded-[48px] md:aspect-[21/9] md:rounded-[60px]">
+            <Media image={p.heroImage} eager sizes="(min-width: 1200px) 1200px, 100vw" position="center" />
           </div>
         </FadeIn>
 
@@ -88,12 +89,27 @@ export default function CaseStudy({ slug }: { slug: string }) {
 
           <section aria-labelledby="s-final" className="border-t border-[#D7E2EA]/15 pt-8">
             <h2 id="s-final" className={label}>Final screens</h2>
-            <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
-              {gallery.map((img, n) => (
-                <div key={n} className={`aspect-[4/3] overflow-hidden rounded-[28px] sm:rounded-[40px] ${n === 0 && gallery.length % 2 === 1 ? 'sm:col-span-2 sm:aspect-[16/8]' : ''}`}>
-                  <Media image={img} label={`${p.title} screen ${n + 1}`} hint="Add images in src/content/content.ts" />
-                </div>
+            <div className="flex flex-col gap-8 sm:gap-10">
+              {screens.map((img) => (
+                <figure key={img.src}>
+                  <div className="overflow-hidden rounded-[20px] border border-[#D7E2EA]/25 sm:rounded-[32px]">
+                    <Media image={img} sizes="(min-width: 1200px) 1200px, 100vw" className="!h-auto object-contain" />
+                  </div>
+                  {img.caption && <figcaption className="mt-3 px-2 text-xs font-light uppercase tracking-[0.2em] text-[#D7E2EA]/60">{img.caption}</figcaption>}
+                </figure>
               ))}
+              {phones.length > 0 && (
+                <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
+                  {phones.map((img) => (
+                    <figure key={img.src}>
+                      <div className="overflow-hidden rounded-[20px] border border-[#D7E2EA]/25 sm:rounded-[28px]">
+                        <Media image={img} sizes="(min-width: 768px) 25vw, 50vw" className="!h-auto object-contain" />
+                      </div>
+                      {img.caption && <figcaption className="mt-3 px-2 text-xs font-light uppercase tracking-[0.2em] text-[#D7E2EA]/60">{img.caption}</figcaption>}
+                    </figure>
+                  ))}
+                </div>
+              )}
             </div>
             {p.liveUrl && (
               <a href={p.liveUrl} target="_blank" rel="noopener noreferrer" className="mt-8 inline-block rounded-full border-2 border-[#D7E2EA] px-8 py-3 text-sm font-medium uppercase tracking-widest text-[#D7E2EA] hover:bg-[#D7E2EA]/10">Visit project</a>

@@ -5,16 +5,16 @@ import { projects, type Project } from '../content/content';
 
 const radius = 'rounded-[40px] sm:rounded-[50px] md:rounded-[60px]';
 
-// One restrained accent per project, used only as a faint wash in placeholders and a small marker.
+// One restrained accent per project, used as a small marker.
 const ACCENTS = ['#B600A8', '#BE4C00', '#7621B0', '#BBCCD7', '#4F7CAC'];
 
 /** Editorial rhythm: each project gets its own composition; the system (type, radius, border) stays constant. */
 const LAYOUTS = [
   { wrap: 'md:grid-cols-12', media: 'md:col-span-7 aspect-[4/3]', text: 'md:col-span-5 md:self-end', order: '' },
   { wrap: 'md:grid-cols-12', media: 'md:col-span-5 md:col-start-8 aspect-[4/5] md:order-2', text: 'md:col-span-6 md:col-start-1 md:order-1 md:self-start md:pt-16', order: '' },
-  { wrap: 'md:grid-cols-12', media: 'md:col-span-12 aspect-[4/3] md:aspect-[21/9]', text: 'md:col-span-8 md:col-start-3 md:text-left', order: '' },
-  { wrap: 'md:grid-cols-12', media: 'md:col-span-6 aspect-[4/3] md:aspect-square', text: 'md:col-span-5 md:col-start-8 md:self-center', order: '' },
-  { wrap: 'md:grid-cols-12', media: 'md:col-span-8 md:col-start-3 aspect-[4/3] md:aspect-[16/10]', text: 'md:col-span-8 md:col-start-3', order: '' },
+  { wrap: 'md:grid-cols-12', media: 'md:col-span-12 aspect-[16/9]', text: 'md:col-span-8 md:col-start-3 md:text-left', order: '' },
+  { wrap: 'md:grid-cols-12', media: 'md:col-span-6 aspect-square', text: 'md:col-span-5 md:col-start-8 md:self-center', order: '' },
+  { wrap: 'md:grid-cols-12', media: 'md:col-span-8 md:col-start-3 aspect-[16/10]', text: 'md:col-span-8 md:col-start-3', order: '' },
 ] as const;
 
 function Pending({ children }: { children: React.ReactNode }) {
@@ -41,9 +41,8 @@ function ProjectEntry({ project, index }: { project: Project; index: number }) {
         >
           <Media
             image={project.coverImage}
-            label={`${project.title} cover`}
-            hint="Add coverImage in src/content/content.ts"
-            tint={tint}
+            eager={index === 0}
+            sizes="(min-width: 768px) 60vw, 100vw"
             className="transition-transform duration-700 ease-out group-hover:scale-[1.03]"
           />
         </a>

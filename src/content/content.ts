@@ -21,7 +21,20 @@ export const about = {
   ],
 };
 
-export type ProjectImage = { src: string; alt: string };
+export type ProjectImage = {
+  src: string;
+  alt: string;
+  /** Intrinsic size, used to reserve space and avoid layout shift. */
+  width: number;
+  height: number;
+  caption?: string;
+  /** Phone-sized screenshot: shown in a compact row instead of full width. */
+  mobile?: boolean;
+};
+
+const base = import.meta.env.BASE_URL;
+const shot = (path: string, width: number, height: number, alt: string, extra: { caption?: string; mobile?: boolean } = {}): ProjectImage =>
+  ({ src: `${base}projects/${path}.webp`, width, height, alt, ...extra });
 
 /** A case-study section. Only sections with real material should be defined. */
 export type CaseBlock = { body?: string; points?: string[] };
@@ -59,9 +72,11 @@ export type Project = {
   description: string;
   /** Short list of focus areas; leave empty until known. */
   highlights: string[];
-  /** Main preview. Leave undefined to show a labelled placeholder. */
-  coverImage?: ProjectImage;
-  /** Further real screens for the case-study gallery. */
+  /** Card preview, cropped to the card's aspect ratio. */
+  coverImage: ProjectImage;
+  /** Wide (21:9) crop for the case-study header. */
+  heroImage: ProjectImage;
+  /** Real screens for the case-study gallery, in reading order. */
   images: ProjectImage[];
   /** Only set when the real year is known. */
   year?: string;
@@ -88,7 +103,20 @@ export const projects: Project[] = [
       'User flows',
       'Interface design',
     ],
-    images: [],
+    coverImage: shot('triply/cover', 2000, 1500, 'TRIPLY dashboard: three trip folders (Japan, Amalfi, Norway) with status, progress and dates'),
+    heroImage: shot('triply/wide', 2000, 857, 'TRIPLY landing screen: "Design the journey. Not just the destination." over a Kyoto street at sunset'),
+    images: [
+      shot('triply/intro', 2000, 1250, 'TRIPLY cinematic landing screen with the headline "Design the journey. Not just the destination."', { caption: 'Landing: scroll-driven intro' }),
+      shot('triply/dashboard', 2000, 1667, 'TRIPLY dashboard with greeting "Good morning, Camille" and three trip folders: Japan, Amalfi and Norway', { caption: 'Dashboard: trips as folders' }),
+      shot('triply/overview', 2000, 1667, 'TRIPLY Japan trip overview with trip details, a route map with three stops, an itinerary preview and trip progress', { caption: 'Trip overview' }),
+      shot('triply/itinerary', 2000, 1667, 'TRIPLY itinerary tab: day selector 01 to 13, Tokyo Essentials with four timed stops and a route map', { caption: 'Itinerary: day by day, with route' }),
+      shot('triply/bookings', 2000, 1667, 'TRIPLY bookings tab with a booking summary and a list of bookings with dates, costs and status', { caption: 'Bookings' }),
+      shot('triply/client', 2000, 1667, 'TRIPLY client tab in designer view with group suggestions, votes and shared trip status', { caption: 'Client collaboration' }),
+      shot('triply/m-dashboard', 780, 1688, 'TRIPLY dashboard on a phone', { mobile: true, caption: 'Phone: dashboard' }),
+      shot('triply/m-overview', 780, 1688, 'TRIPLY trip overview on a phone', { mobile: true, caption: 'Phone: overview' }),
+      shot('triply/m-itinerary', 780, 1688, 'TRIPLY itinerary on a phone', { mobile: true, caption: 'Phone: itinerary' }),
+      shot('triply/m-intro', 780, 1688, 'TRIPLY landing screen on a phone', { mobile: true, caption: 'Phone: landing' }),
+    ],
     caseStudy: {
       overview: {
         body:
@@ -113,7 +141,16 @@ export const projects: Project[] = [
       'E-commerce user experience',
       'Responsive layouts',
     ],
-    images: [],
+    coverImage: shot('lumie/cover', 1200, 1500, 'LUMIÉ homepage: hero with a model wearing a green clay mask, the LUMIÉ wordmark, and a category carousel'),
+    heroImage: shot('lumie/wide', 1200, 514, 'LUMIÉ homepage hero: "Когда уход раскрывает свет кожи" next to a close-up portrait'),
+    images: [
+      shot('lumie/hero', 1200, 730, 'LUMIÉ homepage hero with navigation, headline and call to action to choose a skincare routine', { caption: 'Homepage hero' }),
+      shot('lumie/categories', 1200, 1020, 'LUMIÉ category carousel (cleansing, cream, SPF, masks, toner) and the best products of 2025', { caption: 'Categories and best sellers' }),
+      shot('lumie/about', 1200, 660, 'LUMIÉ section about Korean cosmetics with a brand ticker', { caption: 'About Korean cosmetics' }),
+      shot('lumie/reviews', 1200, 450, 'LUMIÉ customer reviews shown as chat screenshots', { caption: 'Reviews' }),
+      shot('lumie/results', 1200, 650, 'LUMIÉ results section with three skin-concern cards: sensitive skin, ready-made routine, dryness and tightness', { caption: 'Results by skin concern' }),
+      shot('lumie/cta', 1200, 770, 'LUMIÉ closing call to action and footer with catalog and contact links', { caption: 'Call to action and footer' }),
+    ],
     caseStudy: {
       overview: {
         body:
@@ -132,7 +169,13 @@ export const projects: Project[] = [
     description:
       'MUZA is an AI-assisted interior design platform. [Editable placeholder: add the project description, your role and the main design work here.]',
     highlights: [],
-    images: [],
+    coverImage: shot('muza/cover', 2000, 1125, 'MUZA pricing section with three plans: Concept €49, Project €349 and Full Service from €790'),
+    heroImage: shot('muza/wide', 2000, 857, 'MUZA pricing section with three plans on a dark interface'),
+    images: [
+      shot('muza/process', 2000, 1142, 'MUZA "Four steps. One of them is human." process section: AI scans your space, AI drafts concepts, designer refines it, final project', { caption: 'How it works: four steps' }),
+      shot('muza/pricing', 2000, 1171, 'MUZA "Clear pricing. No hourly surprises." with Concept, Project and Full Service plans', { caption: 'Pricing' }),
+      shot('muza/reviews', 2000, 1685, 'MUZA "Clients, unscripted." review cards', { caption: 'Client reviews' }),
+    ],
     pending: { description: true, highlights: true, kind: true },
     caseStudy: {
       overview: { body: 'An AI-assisted interior design platform, as listed in the profile. The rest of the case study has not been written yet.' },
@@ -150,7 +193,17 @@ export const projects: Project[] = [
     description:
       'A landing page for an AI automation SaaS product. [Editable placeholder: add the product purpose, target audience and the interface work here.]',
     highlights: [],
-    images: [],
+    coverImage: shot('saas/cover', 1200, 1200, 'Dark AI-automation landing page: headline "Automate Your Income with AI" with a purple call to action'),
+    heroImage: shot('saas/wide', 1200, 514, 'Dark AI-automation landing page hero: "Automate Your Income with AI"'),
+    images: [
+      shot('saas/hero', 1200, 850, 'AI-automation landing page hero with navigation, headline, two buttons and a glowing gradient background', { caption: 'Hero' }),
+      shot('saas/learn-1', 1200, 1000, 'Landing page section "What You\'ll Learn" with step 01 Workflow Systems and step 02 AI Assistant', { caption: 'What you\'ll learn (1/2)' }),
+      shot('saas/learn-2', 1200, 1050, 'Landing page steps 03 Real Projects and 04 Optimization with product interface cards', { caption: 'What you\'ll learn (2/2)' }),
+      shot('saas/benefits', 1200, 610, 'Landing page results section with four benefit cards', { caption: 'What you\'ll achieve' }),
+      shot('saas/pricing', 1200, 900, 'Landing page pricing: Free, Pro and Premium plans with a monthly and annual toggle', { caption: 'Pricing' }),
+      shot('saas/faq', 1200, 700, 'Landing page frequently asked questions accordion', { caption: 'FAQ' }),
+      shot('saas/cta', 1200, 775, 'Landing page closing call to action "Build Your First System" and footer', { caption: 'Call to action and footer' }),
+    ],
     pending: { description: true, highlights: true, kind: true },
     caseStudy: {
       overview: { body: 'A landing page for an AI automation SaaS product, as listed in the profile. The rest of the case study has not been written yet.' },
@@ -167,7 +220,18 @@ export const projects: Project[] = [
     description:
       '[Editable placeholder: add a short description of Gift Match, its purpose and its user flow.]',
     highlights: [],
-    images: [],
+    coverImage: shot('gift-match/cover', 1200, 750, 'GIFT MATCH final design: purple hero "Готовый подарок от 20 €, доставка по странам ЕС" and the start of the gift-selection section'),
+    heroImage: shot('gift-match/wide', 1200, 514, 'GIFT MATCH final design hero with a purple background, illustration and giftmatch wordmark'),
+    images: [
+      shot('gift-match/hero', 1200, 550, 'GIFT MATCH hero: navigation, headline, short questionnaire call to action and a gift illustration', { caption: 'Hero' }),
+      shot('gift-match/process', 1200, 970, 'GIFT MATCH gift selection section with six option cards: questionnaire, surprise boxes, by interests, by age, customization, consultation', { caption: 'Choosing a gift' }),
+      shot('gift-match/consultation', 1200, 440, 'GIFT MATCH film-strip banner and call to action "Готовы подобрать подарок?"', { caption: 'Consultation call to action' }),
+      shot('gift-match/advantages', 1200, 650, 'GIFT MATCH advantages section with six benefit cards and illustrations', { caption: 'Advantages' }),
+      shot('gift-match/gallery', 1200, 530, 'GIFT MATCH gallery of finished gift sets with contents lists', { caption: 'Gifts that already brought joy' }),
+      shot('gift-match/offer', 1200, 540, 'GIFT MATCH offer banner with a 15% discount and a film strip of photos', { caption: 'Offer' }),
+      shot('gift-match/faq-reviews', 1200, 670, 'GIFT MATCH FAQ accordion and client reviews', { caption: 'FAQ and reviews' }),
+      shot('gift-match/footer', 1200, 424, 'GIFT MATCH footer with contacts and the giftmatch wordmark', { caption: 'Footer' }),
+    ],
     pending: { description: true, highlights: true },
     caseStudy: {},
   },
