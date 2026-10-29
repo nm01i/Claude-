@@ -1,18 +1,13 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Billboard, Html, useTexture } from '@react-three/drei';
-import { useMemo, useRef } from 'react';
+import { Suspense, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import type { MotionValue } from 'framer-motion';
-import { profile } from '../content/content';
+import { projects } from '../content/content';
+import { POSE_A, POSE_B, POSE_ASPECT } from '../components/PoseFigure';
+import { T, poseOpacity, seg } from './timeline';
 
 type Progress = { hero: MotionValue<number>; contact: MotionValue<number> };
-
-const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
-const smooth = (v: number) => {
-  const t = clamp01(v);
-  return t * t * (3 - 2 * t);
-};
-const seg = (p: number, a: number, b: number) => smooth((p - a) / (b - a));
 
 // Monitor geometry (world units)
 const MON = new THREE.Vector3(0.7, 1.55, -0.2);
@@ -21,9 +16,9 @@ const SCREEN_H = 0.99;
 // drei's <Html transform> maps 1 css px to ~1/HTML_K world units at scale=1 (calibrated against screenshots).
 const HTML_K = 37;
 
-// Camera keyframes
-const WIDE_POS = new THREE.Vector3(0.1, 1.9, 5.8);
-const WIDE_LOOK = new THREE.Vector3(0, 1.35, 0);
+// Camera keyframes. The wide shot leaves the top ~30% of the frame empty for the HTML heading.
+const WIDE_POS = new THREE.Vector3(-0.35, 2.1, 6.1);
+const WIDE_LOOK = new THREE.Vector3(-0.35, 1.98, 0);
 const SCREEN_POS = new THREE.Vector3(MON.x, MON.y, MON.z + 0.035 + 1.42);
 const SCREEN_LOOK = new THREE.Vector3(MON.x, MON.y, MON.z);
 const ORBIT_TARGET = new THREE.Vector3(0.1, 1.3, 0);
@@ -31,19 +26,18 @@ const ORBIT_TARGET = new THREE.Vector3(0.1, 1.3, 0);
 const tmpPos = new THREE.Vector3();
 const tmpLook = new THREE.Vector3();
 
-function CameraRig({ progress, active }: { progress: Progress; active: React.MutableRefObject<'hero' | 'contact' | null> }) {
+type Active = React.MutableRefObject<'hero' | 'contact' | null>;
+
+function CameraRig({ progress, active }: { progress: Progress; active: Active }) {
   const { camera, invalidate } = useThree();
   useFrame(() => {
     const mode = active.current;
     if (!mode) return;
     if (mode === 'hero') {
-      const p = progress.hero.get();
-      const t = seg(p, 0.05, 0.95);
+      // The camera stays put while the pose changes; it moves only after the pointing pose is established.
+      const t = seg(progress.hero.get(), T.camStart, T.camEnd);
       tmpPos.lerpVectors(WIDE_POS, SCREEN_POS, t);
       tmpLook.lerpVectors(WIDE_LOOK, SCREEN_LOOK, t);
-      // gentle arc: swing slightly left then centre as we dolly in
-      tmpPos.x += Math.sin(t * Math.PI) * -0.9;
-      tmpPos.y += Math.sin(t * Math.PI) * 0.15;
     } else {
       const p = progress.contact.get();
       const pull = seg(p, 0, 0.35); // monitor-fill -> wide
@@ -55,7 +49,7 @@ function CameraRig({ progress, active }: { progress: Progress; active: React.Mut
         const a0 = Math.atan2(WIDE_POS.x - ORBIT_TARGET.x, WIDE_POS.z - ORBIT_TARGET.z);
         const a = a0 + orbit * (Math.PI / 2.15);
         const rr = r * (1 - orbit * 0.12);
-        tmpPos.set(ORBIT_TARGET.x + Math.sin(a) * rr, WIDE_POS.y - orbit * 0.35, ORBIT_TARGET.z + Math.cos(a) * rr);
+        tmpPos.set(ORBIT_TARGET.x + Math.sin(a) * rr, WIDE_POS.y - orbit * 0.6, ORBIT_TARGET.z + Math.cos(a) * rr);
         tmpLook.copy(WIDE_LOOK).lerp(ORBIT_TARGET, orbit);
       }
     }
@@ -66,23 +60,54 @@ function CameraRig({ progress, active }: { progress: Progress; active: React.Mut
   return null;
 }
 
-function Character() {
-  const tex = useTexture(`${import.meta.env.BASE_URL}anastasiia-doll.webp`);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 4;
-  const ref = useRef<THREE.Group>(null);
-  useFrame(({ clock }) => {
-    if (ref.current) ref.current.position.y = Math.sin(clock.elapsedTime * 1.2) * 0.02;
+const CHAR_H = 2.3;
+const CHAR_W = CHAR_H * POSE_ASPECT;
+
+/** Two aligned pose planes in one group: B fades in over A as the hero progress advances. */
+function Character({ progress, active }: { progress: Progress; active: Active }) {
+  const [texA, texB] = useTexture([POSE_A, POSE_B]);
+  [texA, texB].forEach((t) => {
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.anisotropy = 4;
   });
-  const h = 2.0;
-  const w = h * (726 / 900);
+  const group = useRef<THREE.Group>(null);
+  const matA = useRef<THREE.MeshBasicMaterial>(null);
+  const matB = useRef<THREE.MeshBasicMaterial>(null);
+
+  useFrame(({ clock }) => {
+    const mode = active.current;
+    const p = progress.hero.get();
+    let a = 1;
+    let b = 0;
+    let lean = 0;
+    if (mode === 'hero') {
+      const o = poseOpacity(p, T.poseStart, T.poseEnd);
+      const gone = 1 - seg(p, T.charStart, T.charEnd);
+      a = o.a * gone;
+      b = o.b * gone;
+      lean = seg(p, T.poseStart, T.poseEnd);
+    }
+    if (matA.current) matA.current.opacity = a;
+    if (matB.current) matB.current.opacity = b;
+    if (group.current) {
+      const t = clock.elapsedTime;
+      // Whole-figure idle: slow breathing and a tiny tilt about the base. No limb or face animation.
+      group.current.rotation.z = Math.sin(t * 0.7) * 0.009;
+      group.current.scale.set(1 + lean * 0.025, (1 + lean * 0.025) * (1 + Math.sin(t * 1.05) * 0.005), 1);
+    }
+  });
+
   return (
-    <group position={[-1.45, 1.45, 0.85]}>
+    <group position={[-1.45, 0.55, 0.2]}>
       <Billboard follow lockX lockZ>
-        <group ref={ref}>
-          <mesh>
-            <planeGeometry args={[w, h]} />
-            <meshBasicMaterial map={tex} transparent alphaTest={0.02} toneMapped={false} />
+        <group ref={group}>
+          <mesh position={[0, CHAR_H / 2, 0]} renderOrder={2}>
+            <planeGeometry args={[CHAR_W, CHAR_H]} />
+            <meshBasicMaterial ref={matA} map={texA} transparent depthWrite={false} toneMapped={false} />
+          </mesh>
+          <mesh position={[0, CHAR_H / 2, 0.002]} renderOrder={3}>
+            <planeGeometry args={[CHAR_W, CHAR_H]} />
+            <meshBasicMaterial ref={matB} map={texB} transparent opacity={0} depthWrite={false} toneMapped={false} />
           </mesh>
         </group>
       </Billboard>
@@ -92,7 +117,7 @@ function Character() {
 
 function Chair() {
   return (
-    <group position={[-1.45, 0, 0.75]}>
+    <group position={[-1.45, 0, 0.1]}>
       <mesh position={[0, 0.5, 0]}>
         <cylinderGeometry args={[0.42, 0.42, 0.1, 32]} />
         <meshStandardMaterial color="#1b1b22" roughness={0.6} />
@@ -112,11 +137,11 @@ function Chair() {
 function Desk() {
   return (
     <group>
-      <mesh position={[0.3, 0.76, -0.1]}>
-        <boxGeometry args={[4.6, 0.09, 1.7]} />
+      <mesh position={[-0.3, 0.76, -0.1]}>
+        <boxGeometry args={[6.2, 0.09, 1.7]} />
         <meshStandardMaterial color="#1c1c23" roughness={0.45} metalness={0.15} />
       </mesh>
-      {[-1.9, 2.5].map((x) =>
+      {[-3.2, 2.6].map((x) =>
         [-0.75, 0.55].map((z) => (
           <mesh key={`${x}${z}`} position={[x, 0.37, z]}>
             <boxGeometry args={[0.08, 0.74, 0.08]} />
@@ -158,7 +183,8 @@ function Desk() {
   );
 }
 
-/** Real DOM rendered on the monitor, so the "site inside the screen" is readable HTML, not a texture. */
+/** Real DOM rendered on the monitor. It shows the project index only, so it never repeats the hero's
+ *  navigation, heading or buttons that sit above the canvas. */
 function ScreenSite() {
   return (
     <div
@@ -170,24 +196,21 @@ function ScreenSite() {
         fontFamily: 'Kanit, sans-serif',
         display: 'flex',
         flexDirection: 'column',
+        padding: '40px 56px',
+        gap: 8,
         pointerEvents: 'none',
         userSelect: 'none',
         overflow: 'hidden',
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', padding: '28px 44px', fontSize: 22, textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 500 }}>
-        <span>About</span><span>Skills</span><span>Projects</span><span>Contact</span>
-      </div>
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 44px' }}>
-        <div className="hero-heading" style={{ fontWeight: 900, fontSize: 150, lineHeight: 0.95, textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
-          {profile.firstName}
+      <div style={{ fontSize: 20, fontWeight: 500, letterSpacing: '0.3em', textTransform: 'uppercase', opacity: 0.6, marginBottom: 8 }}>Selected projects</div>
+      {projects.map((p) => (
+        <div key={p.id} style={{ display: 'flex', alignItems: 'baseline', gap: 28, borderTop: '1px solid rgba(215,226,234,0.18)', padding: '10px 0', flex: 1, minHeight: 0 }}>
+          <span className="hero-heading" style={{ fontWeight: 900, fontSize: 56, lineHeight: 1, width: 96 }}>{p.number}</span>
+          <span className="hero-heading" style={{ fontWeight: 900, fontSize: 56, lineHeight: 1, textTransform: 'uppercase', letterSpacing: '-0.01em' }}>{p.title}</span>
+          <span style={{ marginLeft: 'auto', fontSize: 18, fontWeight: 300, letterSpacing: '0.12em', textTransform: 'uppercase', opacity: 0.6 }}>{p.category.split(' / ')[0]}</span>
         </div>
-        <div style={{ fontSize: 30, fontWeight: 300, textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 18 }}>{profile.title}</div>
-      </div>
-      <div style={{ padding: '0 44px 36px', display: 'flex', gap: 16 }}>
-        <span style={{ borderRadius: 999, padding: '14px 36px', background: 'linear-gradient(123deg,#18011F 7%,#B600A8 37%,#7621B0 72%,#BE4C00 100%)', color: '#fff', fontSize: 20, textTransform: 'uppercase', letterSpacing: '0.12em' }}>{profile.primaryCta}</span>
-        <span style={{ borderRadius: 999, padding: '12px 34px', border: '2px solid #D7E2EA', fontSize: 20, textTransform: 'uppercase', letterSpacing: '0.12em' }}>{profile.secondaryCta}</span>
-      </div>
+      ))}
     </div>
   );
 }
@@ -240,7 +263,7 @@ function Backdrop() {
   );
 }
 
-export default function Workstation3D({ progress, active }: { progress: Progress; active: React.MutableRefObject<'hero' | 'contact' | null> }) {
+export default function Workstation3D({ progress, active }: { progress: Progress; active: Active }) {
   return (
     <Canvas
       frameloop="demand"
@@ -257,7 +280,9 @@ export default function Workstation3D({ progress, active }: { progress: Progress
       <Desk />
       <Chair />
       <Monitor />
-      <Character />
+      <Suspense fallback={null}>
+        <Character progress={progress} active={active} />
+      </Suspense>
       <CameraRig progress={progress} active={active} />
     </Canvas>
   );

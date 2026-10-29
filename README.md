@@ -20,4 +20,10 @@ Everything lives in `src/content/content.ts`: profile, about, projects, skills, 
 
 ## Modes
 * Desktop (768px and up), motion allowed, WebGL available: cinematic scroll scene.
-* Mobile, `prefers-reduced-motion`, or no WebGL: no canvas; static hero, plain stacked sections, no scroll-linked text reveal.
+* Mobile or no WebGL: no canvas; the hero cross-fades the two poses on scroll (HTML only), then normal flow.
+* `prefers-reduced-motion`: static greeting pose, no sticky hero, no scroll-linked text reveal.
+
+## Character poses
+`public/character/pose-a.webp` (greeting) and `pose-b.webp` (pointing) share one aligned frame. To replace them, run
+`python3 tools/build-poses.py <poseA> <poseB>` (needs numpy, scipy, pillow; update the pupil coordinates in the script for new art).
+The scroll timeline lives in `src/scene/timeline.ts`.

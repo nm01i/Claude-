@@ -1,6 +1,6 @@
 import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { useScroll } from 'framer-motion';
-import HeroStage from './sections/HeroStage';
+import HeroStage, { type HeroMode } from './sections/HeroStage';
 import MarqueeSection from './sections/MarqueeSection';
 import AboutSection from './sections/AboutSection';
 import SkillsSection from './sections/SkillsSection';
@@ -16,6 +16,7 @@ export default function App() {
   const slug = useHashRoute();
   const cinematic = useCinematic() && !slug;
   const reduced = useReducedMotionPref();
+  const mode: HeroMode = cinematic ? 'cinematic' : reduced ? 'static' : 'lite';
 
   const heroRef = useRef<HTMLElement>(null);
   const contactRef = useRef<HTMLElement>(null);
@@ -70,7 +71,7 @@ export default function App() {
         </div>
       )}
 
-      <HeroStage stageRef={heroRef} progress={hero} cinematic={cinematic} />
+      <HeroStage stageRef={heroRef} progress={hero} mode={mode} />
 
       <div className="relative z-20 bg-[#0C0C0C]">
         <MarqueeSection />
