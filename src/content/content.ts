@@ -103,7 +103,7 @@ export const projects: Project[] = [
       'User flows',
       'Interface design',
     ],
-    coverImage: shot('triply/cover', 2000, 1500, 'TRIPLY dashboard: three trip folders (Japan, Amalfi, Norway) with status, progress and dates'),
+    coverImage: shot('triply/cover', 1536, 1024, 'TRIPLY landing screen on a laptop and a phone: "Design the journey. Not just the destination." over a Kyoto street at sunset'),
     heroImage: shot('triply/wide', 2000, 857, 'TRIPLY landing screen: "Design the journey. Not just the destination." over a Kyoto street at sunset'),
     images: [
       shot('triply/intro', 2000, 1250, 'TRIPLY cinematic landing screen with the headline "Design the journey. Not just the destination."', { caption: 'Landing: scroll-driven intro' }),
@@ -141,7 +141,7 @@ export const projects: Project[] = [
       'E-commerce user experience',
       'Responsive layouts',
     ],
-    coverImage: shot('lumie/cover', 1200, 1500, 'LUMIÉ homepage: hero with a model wearing a green clay mask, the LUMIÉ wordmark, and a category carousel'),
+    coverImage: shot('lumie/cover', 1536, 1024, 'LUMIÉ homepage on a laptop: "Когда уход раскрывает свет кожи" beside a portrait of a model with a green clay mask'),
     heroImage: shot('lumie/wide', 1200, 514, 'LUMIÉ homepage hero: "Когда уход раскрывает свет кожи" next to a close-up portrait'),
     images: [
       shot('lumie/hero', 1200, 730, 'LUMIÉ homepage hero with navigation, headline and call to action to choose a skincare routine', { caption: 'Homepage hero' }),
@@ -169,7 +169,7 @@ export const projects: Project[] = [
     description:
       'MUZA is an AI-assisted interior design platform. [Editable placeholder: add the project description, your role and the main design work here.]',
     highlights: [],
-    coverImage: shot('muza/cover', 2000, 1125, 'MUZA pricing section with three plans: Concept €49, Project €349 and Full Service from €790'),
+    coverImage: shot('muza/cover', 1536, 1024, 'MUZA homepage on a tablet: "Interior design, without the wait." over a rendered kitchen interior'),
     heroImage: shot('muza/wide', 2000, 857, 'MUZA pricing section with three plans on a dark interface'),
     images: [
       shot('muza/process', 2000, 1142, 'MUZA "Four steps. One of them is human." process section: AI scans your space, AI drafts concepts, designer refines it, final project', { caption: 'How it works: four steps' }),
@@ -193,7 +193,7 @@ export const projects: Project[] = [
     description:
       'A landing page for an AI automation SaaS product. [Editable placeholder: add the product purpose, target audience and the interface work here.]',
     highlights: [],
-    coverImage: shot('saas/cover', 1200, 1200, 'Dark AI-automation landing page: headline "Automate Your Income with AI" with a purple call to action'),
+    coverImage: shot('saas/cover', 1586, 992, 'Landing page "Automate Your Income with AI" on a desktop monitor'),
     heroImage: shot('saas/wide', 1200, 514, 'Dark AI-automation landing page hero: "Automate Your Income with AI"'),
     images: [
       shot('saas/hero', 1200, 850, 'AI-automation landing page hero with navigation, headline, two buttons and a glowing gradient background', { caption: 'Hero' }),
@@ -220,7 +220,7 @@ export const projects: Project[] = [
     description:
       '[Editable placeholder: add a short description of Gift Match, its purpose and its user flow.]',
     highlights: [],
-    coverImage: shot('gift-match/cover', 1200, 750, 'GIFT MATCH final design: purple hero "Готовый подарок от 20 €, доставка по странам ЕС" and the start of the gift-selection section'),
+    coverImage: shot('gift-match/cover', 1566, 1004, 'GIFT MATCH mobile design on a phone: purple hero "Готовый подарок от 20 €, доставка по странам ЕС"'),
     heroImage: shot('gift-match/wide', 1200, 514, 'GIFT MATCH final design hero with a purple background, illustration and giftmatch wordmark'),
     images: [
       shot('gift-match/hero', 1200, 550, 'GIFT MATCH hero: navigation, headline, short questionnaire call to action and a gift illustration', { caption: 'Hero' }),

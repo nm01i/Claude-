@@ -10,11 +10,11 @@ const ACCENTS = ['#B600A8', '#BE4C00', '#7621B0', '#BBCCD7', '#4F7CAC'];
 
 /** Editorial rhythm: each project gets its own composition; the system (type, radius, border) stays constant. */
 const LAYOUTS = [
-  { wrap: 'md:grid-cols-12', media: 'md:col-span-7 aspect-[4/3]', text: 'md:col-span-5 md:self-end', order: '' },
-  { wrap: 'md:grid-cols-12', media: 'md:col-span-5 md:col-start-8 aspect-[4/5] md:order-2', text: 'md:col-span-6 md:col-start-1 md:order-1 md:self-start md:pt-16', order: '' },
+  { wrap: 'md:grid-cols-12', media: 'md:col-span-7 aspect-[3/2]', text: 'md:col-span-5 md:self-end', order: '' },
+  { wrap: 'md:grid-cols-12', media: 'md:col-span-5 md:col-start-8 aspect-[3/2] md:order-2', text: 'md:col-span-6 md:col-start-1 md:order-1 md:self-start md:pt-16', order: '' },
   { wrap: 'md:grid-cols-12', media: 'md:col-span-12 aspect-[16/9]', text: 'md:col-span-8 md:col-start-3 md:text-left', order: '' },
-  { wrap: 'md:grid-cols-12', media: 'md:col-span-6 aspect-square', text: 'md:col-span-5 md:col-start-8 md:self-center', order: '' },
-  { wrap: 'md:grid-cols-12', media: 'md:col-span-8 md:col-start-3 aspect-[16/10]', text: 'md:col-span-8 md:col-start-3', order: '' },
+  { wrap: 'md:grid-cols-12', media: 'md:col-span-6 aspect-[4/3]', text: 'md:col-span-5 md:col-start-8 md:self-center', order: '' },
+  { wrap: 'md:grid-cols-12', media: 'md:col-span-8 md:col-start-3 aspect-[3/2]', text: 'md:col-span-8 md:col-start-3', order: '' },
 ] as const;
 
 function Pending({ children }: { children: React.ReactNode }) {
@@ -43,6 +43,7 @@ function ProjectEntry({ project, index }: { project: Project; index: number }) {
             image={project.coverImage}
             eager={index === 0}
             sizes="(min-width: 768px) 60vw, 100vw"
+            position="center"
             className="transition-transform duration-700 ease-out group-hover:scale-[1.03]"
           />
         </a>
