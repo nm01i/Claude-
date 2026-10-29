@@ -36,3 +36,19 @@ One page ("Page 1"). Top-level frames, in order of the design process:
 Not found in the file: a written brief, user research notes, user flow diagram, component library, Figma variables (variable query returned `{}`),
 prototype links, hover/active states, forms.
 Not accessible through the connector: Figma prototype connections and Dev-mode annotations.
+
+---
+## Update: sources recovered after the first pass
+
+The first pass reported the four non-Figma sources as blocked. Two other routes turned out to work:
+
+| Source | Route | Result |
+|---|---|---|
+| `nm01i/muza-ai-assisted-interior-design` (private GitHub repo) | repo access | Full source of the MUZA page recovered: see `muza.md` |
+| `nm01i/triply` (private GitHub repo) | repo access | Full source and 25 real assets recovered: see `triply.md` |
+| Framer `Intuitive-Pumpkin` (project `KLkhxqwPDeULPR3zjpZe`) | Framer connector, read-only queries | **It is LUMIÉ**: Korean skincare shop, Russian-language, pages `/` and `/catalog`, CMS collections Products (26 items) and Categories (6), fonts Playfair Display and Nunito, colours #232424, #868672, #404034, #FDF9F2 |
+| Framer `Xtract Template (copy)` (project `DGFhrOnWuNkzDWwVh8Tw`) | Framer connector, read-only queries | **A duplicate of a third-party template**: root metadata still reads "Flowcore - AI automation agency framer template"; page copy is a 14-day AI-automation sprint ("Automate Your Income with AI") with pricing, FAQ, blog and contact (placeholder `flowcore@gmail.com`); dark purple theme, Satoshi and Inter. It does not describe an "AI automation SaaS product", so it may not be the SAAS / FlowAutomate project. See `questions.md` |
+| Live sites (Vercel, Netlify) | still blocked | Repo contents stand in for the live pages; the live check remains open |
+
+The Framer account also lists other projects that were not opened (Effective Diplodocus, fellaz, Galerie Holm (copy), Left Object).
+No earlier-conversation records exist on this account beyond this session, so nothing could be recovered from them.

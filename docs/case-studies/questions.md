@@ -23,3 +23,19 @@
 16. Year, if you want one shown.
 17. Any briefs, notes, Figma links, flow diagrams or wireframes for TRIPLY, LUMIÉ, MUZA, SAAS.
 18. Do you want Behance-ready boards (1400 px wide) produced from real exports, or only the website case studies?
+
+
+---
+## Update after recovering the repos and Framer projects (replaces the earlier P0 items for MUZA and TRIPLY)
+
+### MUZA and TRIPLY: the only gaps left
+1. Role and tools per project (including AI tools for code, imagery, video).
+2. Status: MUZA concept vs client work. TRIPLY is a concept prototype.
+3. Which MUZA figures and names are real (prices, budgets, Amsterdam case study, reviews, "Featured in"). Otherwise they are labelled sample content.
+4. Origin and licence of the AI-looking imagery and videos in both projects.
+5. TRIPLY: were the screen captures exported from a design file or captured from the app? Should the intro's "Case Study" link point to this portfolio?
+6. Allow `muza-ai-assisted-interior-design.vercel.app` and `triply-travel-planner.netlify.app` in the network settings for a live check.
+
+### New, from the Framer projects
+7. **LUMIÉ** is the Framer project "Intuitive Pumpkin" (Russian-language, "Korean skincare buyer", 26 products). Is it a concept, or a real shop? Its footer says "© LUMIÉ, 2026" and offers delivery to the EU and CIS.
+8. **"Xtract Template (copy)"** is a copy of a purchased or free third-party Framer template (metadata: "Flowcore - AI automation agency framer template"). Is this your SAAS / FlowAutomate project, or is FlowAutomate somewhere else (for example "Effective Diplodocus")? If it is this one, what did you design or change compared with the template? The case study must say.
