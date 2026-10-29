@@ -1,11 +1,11 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Billboard, Html, useTexture } from '@react-three/drei';
-import { Suspense, useMemo, useRef } from 'react';
+import { Billboard, Html } from '@react-three/drei';
+import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import type { MotionValue } from 'framer-motion';
 import { projects } from '../content/content';
-import { POSE_A, POSE_B, POSE_ASPECT } from '../components/PoseFigure';
-import { T, poseOpacity, seg } from './timeline';
+import { CHARACTER, pickVideoSrc } from '../components/characterVideo';
+import { T, clamp01, seg } from './timeline';
 
 type Progress = { hero: MotionValue<number>; contact: MotionValue<number> };
 
@@ -60,56 +60,92 @@ function CameraRig({ progress, active }: { progress: Progress; active: Active })
   return null;
 }
 
-const CHAR_H = 2.3;
-const CHAR_W = CHAR_H * POSE_ASPECT;
+const CHAR_H = 2.15;
+const CHAR_W = CHAR_H * CHARACTER.aspect;
 
-/** Two aligned pose planes in one group: B fades in over A as the hero progress advances. */
+/**
+ * The character video on a billboard plane. The video follows the hero scroll progress (it never plays by itself).
+ * It has a black background, so the plane uses MAX blending: max(video, scene) keeps the figure unchanged and lets the
+ * black fall away, with no keying and no halo. Fading the character out is a multiplier on the colour.
+ */
 function Character({ progress, active }: { progress: Progress; active: Active }) {
-  const [texA, texB] = useTexture([POSE_A, POSE_B]);
-  [texA, texB].forEach((t) => {
-    t.colorSpace = THREE.SRGBColorSpace;
-    t.anisotropy = 4;
-  });
-  const group = useRef<THREE.Group>(null);
-  const matA = useRef<THREE.MeshBasicMaterial>(null);
-  const matB = useRef<THREE.MeshBasicMaterial>(null);
+  const { invalidate } = useThree();
+  const mat = useRef<THREE.MeshBasicMaterial>(null);
+  const st = useRef({ cur: 0 });
 
-  useFrame(({ clock }) => {
+  const video = useMemo(() => {
+    const v = document.createElement('video');
+    v.muted = true;
+    v.playsInline = true;
+    v.preload = 'auto';
+    v.setAttribute('aria-hidden', 'true');
+    v.style.cssText = 'position:fixed;left:0;top:0;width:1px;height:1px;opacity:0;pointer-events:none';
+    v.src = pickVideoSrc();
+    return v;
+  }, []);
+
+  const tex = useMemo(() => {
+    const t = new THREE.VideoTexture(video);
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.minFilter = THREE.LinearFilter;
+    t.generateMipmaps = false;
+    return t;
+  }, [video]);
+
+  useEffect(() => {
+    document.body.appendChild(video);
+    const refresh = () => {
+      tex.needsUpdate = true;
+      invalidate();
+    };
+    video.addEventListener('loadeddata', refresh);
+    video.addEventListener('seeked', refresh);
+    video.load();
+    return () => {
+      video.removeEventListener('loadeddata', refresh);
+      video.removeEventListener('seeked', refresh);
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+      video.remove();
+      tex.dispose();
+    };
+  }, [video, tex, invalidate]);
+
+  useFrame((_, dt) => {
     const mode = active.current;
     const p = progress.hero.get();
-    let a = 1;
-    let b = 0;
-    let lean = 0;
+    let target = 0; // contact scene: greeting frame
+    let fade = 1;
     if (mode === 'hero') {
-      const o = poseOpacity(p, T.poseStart, T.poseEnd);
-      const gone = 1 - seg(p, T.charStart, T.charEnd);
-      a = o.a * gone;
-      b = o.b * gone;
-      lean = seg(p, T.poseStart, T.poseEnd);
+      target = CHARACTER.duration * clamp01((p - T.poseStart) / (T.poseEnd - T.poseStart));
+      fade = 1 - seg(p, T.charStart, T.charEnd);
     }
-    if (matA.current) matA.current.opacity = a;
-    if (matB.current) matB.current.opacity = b;
-    if (group.current) {
-      const t = clock.elapsedTime;
-      // Whole-figure idle: slow breathing and a tiny tilt about the base. No limb or face animation.
-      group.current.rotation.z = Math.sin(t * 0.7) * 0.009;
-      group.current.scale.set(1 + lean * 0.025, (1 + lean * 0.025) * (1 + Math.sin(t * 1.05) * 0.005), 1);
-    }
+    const s = st.current;
+    const d = target - s.cur;
+    s.cur = Math.abs(d) < 0.004 ? target : s.cur + d * (1 - Math.exp(-Math.min(dt, 0.25) * 18)); // frame-rate independent
+    if (!video.seeking && video.readyState >= 1 && Math.abs(video.currentTime - s.cur) > 0.01) video.currentTime = s.cur;
+    if (mat.current) mat.current.color.setScalar(fade);
   });
 
   return (
-    <group position={[-1.45, 0.55, 0.2]}>
+    <group position={[-1.7, 0.55, 0.2]}>
       <Billboard follow lockX lockZ>
-        <group ref={group}>
-          <mesh position={[0, CHAR_H / 2, 0]} renderOrder={2}>
-            <planeGeometry args={[CHAR_W, CHAR_H]} />
-            <meshBasicMaterial ref={matA} map={texA} transparent depthWrite={false} toneMapped={false} />
-          </mesh>
-          <mesh position={[0, CHAR_H / 2, 0.002]} renderOrder={3}>
-            <planeGeometry args={[CHAR_W, CHAR_H]} />
-            <meshBasicMaterial ref={matB} map={texB} transparent opacity={0} depthWrite={false} toneMapped={false} />
-          </mesh>
-        </group>
+        <mesh position={[0, CHAR_H / 2, 0]} renderOrder={2}>
+          <planeGeometry args={[CHAR_W, CHAR_H]} />
+          <meshBasicMaterial
+            ref={mat}
+            map={tex}
+            transparent
+            blending={THREE.CustomBlending}
+            blendEquation={THREE.MaxEquation}
+            blendSrc={THREE.OneFactor}
+            blendDst={THREE.OneFactor}
+            depthWrite={false}
+            toneMapped={false}
+            fog={false}
+          />
+        </mesh>
       </Billboard>
     </group>
   );
@@ -280,9 +316,7 @@ export default function Workstation3D({ progress, active }: { progress: Progress
       <Desk />
       <Chair />
       <Monitor />
-      <Suspense fallback={null}>
-        <Character progress={progress} active={active} />
-      </Suspense>
+      <Character progress={progress} active={active} />
       <CameraRig progress={progress} active={active} />
     </Canvas>
   );

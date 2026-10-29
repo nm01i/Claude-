@@ -4,7 +4,8 @@ import type { MotionValue } from 'framer-motion';
 import FadeIn from '../components/FadeIn';
 import ContactButton from '../components/ContactButton';
 import Navbar from '../components/Navbar';
-import PoseFigure, { POSE_A, POSE_B } from '../components/PoseFigure';
+import CharacterVideo from '../components/CharacterVideo';
+import { CHARACTER } from '../components/characterVideo';
 import { useScrollEffect } from '../hooks/useScrollEffect';
 import { profile } from '../content/content';
 import { T, T_LITE, seg } from '../scene/timeline';
@@ -29,13 +30,11 @@ export default function HeroStage({ stageRef, progress, mode }: Props) {
   const bottom = useRef<HTMLDivElement>(null);
   const hint = useRef<HTMLDivElement>(null);
 
-  // Preload both poses so the cross-fade never waits on the network.
+  // The poster frame is what shows before the video has data, and in the reduced-motion hero.
   useEffect(() => {
-    [POSE_A, POSE_B].forEach((src) => {
-      const i = new Image();
-      i.src = src;
-      i.decode?.().catch(() => {});
-    });
+    const i = new Image();
+    i.src = CHARACTER.poster;
+    i.decode?.().catch(() => {});
   }, []);
 
   useScrollEffect(progress, (p) => {
@@ -77,11 +76,12 @@ export default function HeroStage({ stageRef, progress, mode }: Props) {
           </FadeIn>
         </div>
 
-        {/* Scene area: transparent over the 3D canvas, or the 2D pose figure for lite/static modes. */}
+        {/* Scene area: transparent over the 3D canvas, or the 2D character video for lite/static modes. */}
         <div className="relative min-h-0 flex-1">
           {!cinematic && (
-            <PoseFigure
-              progress={mode === 'lite' ? progress : undefined}
+            <CharacterVideo
+              progress={progress}
+              scrub={mode === 'lite'}
               start={T_LITE.poseStart}
               end={T_LITE.poseEnd}
               className="absolute bottom-0 left-1/2 h-full max-w-[94%] -translate-x-1/2"
