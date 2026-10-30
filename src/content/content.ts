@@ -522,7 +522,7 @@ export const contact = {
   links: {
     email: 'nastya.2003t@gmail.com',
     linkedin: 'https://www.linkedin.com/in/anastasiiatrapeznikova-252312418',
-    behance: '',
+    behance: 'https://www.behance.net/nastya20030334',
   },
 };
 
