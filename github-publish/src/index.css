@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root { background: #0C0C0C; }
+body { font-family: 'Kanit', sans-serif; color: #D7E2EA; -webkit-font-smoothing: antialiased; }
+
+.hero-heading {
+  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+:focus-visible { outline: 2px solid #BBCCD7; outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+html { scroll-behavior: smooth; }
+
+@keyframes hint-nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+.hint-arrow { animation: hint-nudge 1.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .hint-arrow { animation: none; } }
+
+@keyframes ribbon-drift-a { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-18px,14px); } }
+@keyframes ribbon-drift-b { 0%,100% { transform: translate(0,0); } 50% { transform: translate(22px,-12px); } }
+.ribbon-a { animation: ribbon-drift-a 14s ease-in-out infinite; }
+.ribbon-b { animation: ribbon-drift-b 17s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .ribbon-a, .ribbon-b { animation: none; } }
