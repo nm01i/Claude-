@@ -62,7 +62,7 @@ export default function App() {
         <div
           aria-hidden
           className="fixed inset-0 z-0"
-          style={{ visibility: canvasOn ? 'visible' : 'hidden' }}
+          style={{ display: canvasOn ? 'block' : 'none' }}
         >
           <Suspense fallback={null}>
             <Workstation3D progress={{ hero, contact }} active={active} />
