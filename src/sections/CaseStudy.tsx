@@ -64,8 +64,8 @@ export default function CaseStudy({ slug }: { slug: string }) {
         </FadeIn>
 
         <FadeIn delay={0.1} className="mt-12 md:mt-16">
-          <div className="aspect-[16/9] overflow-hidden rounded-[32px] border-2 border-[#D7E2EA]/60 sm:rounded-[48px] md:aspect-[21/9] md:rounded-[60px]">
-            <Media image={p.heroImage} eager sizes="(min-width: 1200px) 1200px, 100vw" position="center" />
+          <div className="overflow-hidden rounded-[28px] border-2 border-[#D7E2EA]/60 sm:rounded-[40px] md:rounded-[48px]">
+            <Media image={p.heroImage} eager sizes="(min-width: 1200px) 1200px, 100vw" className="!h-auto object-contain" />
           </div>
         </FadeIn>
 
