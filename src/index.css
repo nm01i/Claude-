@@ -24,3 +24,9 @@ html { scroll-behavior: smooth; }
 @keyframes hint-nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
 .hint-arrow { animation: hint-nudge 1.6s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .hint-arrow { animation: none; } }
+
+@keyframes ribbon-drift-a { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-18px,14px); } }
+@keyframes ribbon-drift-b { 0%,100% { transform: translate(0,0); } 50% { transform: translate(22px,-12px); } }
+.ribbon-a { animation: ribbon-drift-a 14s ease-in-out infinite; }
+.ribbon-b { animation: ribbon-drift-b 17s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .ribbon-a, .ribbon-b { animation: none; } }

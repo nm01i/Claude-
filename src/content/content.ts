@@ -14,11 +14,13 @@ export const profile = {
 
 export const about = {
   heading: 'About me',
-  paragraphs: [
-    'I’m a web and UI/UX designer interested in creating digital experiences that balance aesthetics and usability.',
-    'I work on website structure, user flows, wireframes, interface design, responsive layouts, and interactive prototypes. I pay attention to typography, visual hierarchy, consistency, and the details that make a website intuitive to use.',
-    'My goal is to create websites that are not only visually appealing but also communicate clearly and help users achieve their goals.',
-  ],
+  number: '( 02 )',
+  tagline: 'Designing digital experiences',
+  location: 'Based in South Korea',
+  discipline: '( UI/UX · Web design )',
+  statement: 'I’m a web and UI/UX designer focused on creating digital experiences that balance',
+  statementAccent: 'aesthetics and usability.',
+  text: 'I design websites and interfaces that are not only visually appealing, but also clear, functional and easy to use. I enjoy working on the structure, user flows and details that make a product feel intuitive and consistent.',
 };
 
 export type ProjectImage = {
@@ -474,6 +476,41 @@ export const skills = {
     'User Flows',
   ],
   tools: ['Figma', 'Framer', 'Tilda'],
+  /** The four cards in the Skills section. Chips come from the skills listed in the profile. */
+  cards: [
+    {
+      label: 'Specialization',
+      title: 'UI/UX Design',
+      text: 'Designing intuitive digital experiences through structure, visual hierarchy and interaction.',
+      chips: ['User flows', 'Wireframes', 'Prototyping', 'UI systems'],
+      tone: 'brown',
+      icon: 'layout',
+    },
+    {
+      label: 'Specialization',
+      title: 'Web Design',
+      text: 'Creating responsive websites with a balance of aesthetics, usability and clear communication.',
+      chips: ['Landing pages', 'Responsive design', 'Framer', 'Figma'],
+      tone: 'navy',
+      icon: 'monitor',
+    },
+    {
+      label: 'Approach',
+      title: 'Design Thinking',
+      text: 'Turning complex ideas into clear structures and meaningful user experiences.',
+      chips: ['Research', 'Information architecture', 'Visual hierarchy', 'Consistency'],
+      tone: 'purple',
+      icon: 'layers',
+    },
+    {
+      label: 'Workflow',
+      title: 'From Idea to Interface',
+      text: 'Taking a project from the first wireframe to a working website, designed and built end to end.',
+      chips: ['Concept to launch', 'Design to code', 'Framer & Tilda', 'AI-assisted workflow'],
+      tone: 'brown',
+      icon: 'workflow',
+    },
+  ],
 };
 
 export const contact = {
