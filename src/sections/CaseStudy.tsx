@@ -40,7 +40,6 @@ export default function CaseStudy({ slug }: { slug: string }) {
   const next = projects[(i + 1) % projects.length];
   const pend = p.pending ?? {};
   const written = caseSections.filter((s) => p.caseStudy[s.key]);
-  const missing = caseSections.filter((s) => !p.caseStudy[s.key]);
   const screens = p.images.filter((x) => !x.mobile);
   const phones = p.images.filter((x) => x.mobile);
 
@@ -116,15 +115,6 @@ export default function CaseStudy({ slug }: { slug: string }) {
             )}
           </section>
 
-          {missing.length > 0 && (
-            <section aria-labelledby="s-missing" className="rounded-[28px] border border-dashed border-[#D7E2EA]/30 p-6 sm:p-8">
-              <h2 id="s-missing" className={label}>Still to add (editable)</h2>
-              <p className="mb-4 max-w-xl font-light text-[#D7E2EA]/70">These sections stay hidden until real material exists. Fill them in under <code className="text-[#D7E2EA]">caseStudy</code> in <code className="text-[#D7E2EA]">src/content/content.ts</code>.</p>
-              <ul className="flex flex-wrap gap-2">
-                {missing.map((s) => <li key={s.key} className="rounded-full border border-[#D7E2EA]/25 px-3 py-1 text-xs font-light uppercase tracking-wider text-[#D7E2EA]/70">{s.label}</li>)}
-              </ul>
-            </section>
-          )}
         </div>
 
         <nav aria-label="Case study navigation" className="mt-20 grid gap-6 border-t border-[#D7E2EA]/15 pt-10 sm:grid-cols-2 md:mt-28">

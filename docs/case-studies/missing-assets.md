@@ -24,3 +24,6 @@ The earlier build had `images: []` and no `coverImage` for all five projects, an
 | SAAS | Confirmation that this Framer project is the intended project | Framer project metadata | Root metadata still reads "Flowcore - AI automation agency framer template" and the product is named Flowcore, not FlowAutomate | A yes/no, or the correct project link |
 | GIFT MATCH | Mobile screens | Figma frame `464:115` | Frame is only 320 px wide, so it is too small to show sharply | PNG export of frame `464:115` at 3x (960×17331) |
 | LUMIÉ | Mobile and catalog page (`/catalog`) | Framer | The catalog page and breakpoint captures were not exported | Full-page PNG at 390 px and 1440 px of `/catalog` |
+
+## Added later
+Phone and tablet captures: LUMIÉ (4, from the 390 px Framer capture), GIFT MATCH (4, native 320 px Figma frame, shown at 1x), MUZA (1: process), SAAS (2 tablet-width captures). MUZA's mobile hero and pricing were left out: without the hosted media the hero is empty, and the pricing capture showed the sticky header mid-image. Still needed: MUZA hero and pricing on a phone, sharp GIFT MATCH mobile (3x export), a real phone capture for SAAS.
