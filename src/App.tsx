@@ -3,7 +3,6 @@ import { useScroll } from 'framer-motion';
 import HeroStage, { type HeroMode } from './sections/HeroStage';
 import MarqueeSection from './sections/MarqueeSection';
 import AboutSection from './sections/AboutSection';
-import SkillsSection from './sections/SkillsSection';
 import ProjectsSection from './sections/ProjectsSection';
 import ContactStage from './sections/ContactStage';
 import CaseStudy from './sections/CaseStudy';
@@ -76,7 +75,6 @@ export default function App() {
       <div className="relative z-20 bg-[#0C0C0C]">
         <MarqueeSection />
         <AboutSection animate={!reduced} />
-        <SkillsSection />
         <ProjectsSection animate={!reduced} />
       </div>
 
